@@ -1,7 +1,10 @@
 using System;
 using Android.App;
 using Android.Runtime;
+using ReactiveUI;
 using ReactiveUISample.Core.Services;
+using ReactiveUISample.Core.ViewModels;
+using ReactiveUISample.Droid.Views;
 using Splat;
 
 namespace ReactiveUISample.Droid
@@ -16,7 +19,9 @@ namespace ReactiveUISample.Droid
         {
             base.OnCreate();
 
-            Locator.CurrentMutable.RegisterConstant(new SearchService(), typeof(ISearchService));
+            var resolver = Locator.CurrentMutable;
+            resolver.RegisterConstant(new SearchService(), typeof(ISearchService));
+            resolver.Register(() => new SearchDetailActivity(), typeof(IViewFor<SearchDetailViewModel>));
         }
     }
 }

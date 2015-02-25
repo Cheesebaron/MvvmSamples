@@ -40,7 +40,7 @@ namespace ReactiveUISample.Droid.Views
             SearchResultListView = FindViewById<ListView>(Resource.Id.searchResultsListView);
 
             this.Bind(ViewModel, vm => vm.SearchQuery, v => v.SearchText.Text);
-            //this.BindCommand(ViewModel, vm => vm.Search, v => v.SearchButton);
+            this.BindCommand(ViewModel, vm => vm.Search, v => v.SearchButton);
 
             var adapter = new ReactiveListAdapter<SearchResultViewModel>(
                 ViewModel.SearchResults,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using MvxSample.Core.Models;
@@ -48,6 +49,10 @@ namespace ReactiveUISample.Core.ViewModels
                 async _ => (await searchService.QueryAsync(SearchQuery, SearchProvider))
                     .Select(x => new SearchResultViewModel(x)),
                 RxApp.MainThreadScheduler);
+
+            Search.ThrownExceptions.Subscribe(x => Debug.WriteLine(x));
+
+            SearchResults = new ReactiveList<SearchResultViewModel>();
 
             var gotoCmd = this.WhenAny(x => x.SelectedResult,
                 change => change.Value != null).ToCommand(RxApp.MainThreadScheduler);
