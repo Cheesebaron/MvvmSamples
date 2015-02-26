@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Input;
 using MvxSample.Core.Models;
 using ReactiveUI;
@@ -31,7 +29,7 @@ namespace ReactiveUISample.Core.ViewModels
             set { this.RaiseAndSetIfChanged(ref _searchProvider, value); }
         }
 
-        public ReactiveCommand<IEnumerable<SearchResultViewModel>> Search { get; protected set; }
+        public ReactiveCommand<SearchResultViewModel> Search { get; protected set; }
 
         public ReactiveList<SearchResultViewModel> SearchResults { get; set; }
 
@@ -44,15 +42,22 @@ namespace ReactiveUISample.Core.ViewModels
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>();
             SearchService = searchService ?? Locator.Current.GetService<ISearchService>();
 
-            Search = ReactiveCommand.CreateAsyncTask(this.WhenAny(x => x.SearchQuery,
-                x => !string.IsNullOrWhiteSpace(x.Value)),
-                async _ => (await searchService.QueryAsync(SearchQuery, SearchProvider))
-                    .Select(x => new SearchResultViewModel(x)),
-                RxApp.MainThreadScheduler);
+            SearchResults = new ReactiveList<SearchResultViewModel>();
+
+            var canExecute = this.WhenAny(x => x.SearchQuery,
+                x => !string.IsNullOrWhiteSpace(x.Value));
+
+            Search = ReactiveCommand.CreateAsyncObservable(canExecute,
+                _ => {
+                    SearchResults.Clear();
+                    return SearchService.QueryAsync(SearchQuery, SearchProvider);
+                });
+
+            Search.Subscribe(result => SearchResults.Add(result));
 
             Search.ThrownExceptions.Subscribe(x => Debug.WriteLine(x));
 
-            SearchResults = new ReactiveList<SearchResultViewModel>();
+            
 
             var gotoCmd = this.WhenAny(x => x.SelectedResult,
                 change => change.Value != null).ToCommand(RxApp.MainThreadScheduler);

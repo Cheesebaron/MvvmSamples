@@ -41,6 +41,8 @@ namespace ReactiveUISample.Droid.Views
 
             this.Bind(ViewModel, vm => vm.SearchQuery, v => v.SearchText.Text);
             this.BindCommand(ViewModel, vm => vm.Search, v => v.SearchButton);
+            //this.BindCommand(ViewModel, vm => vm.GoToSearchDetailCommand,
+            //    v => v.SearchResultListView.ItemClick);
 
             var adapter = new ReactiveListAdapter<SearchResultViewModel>(
                 ViewModel.SearchResults,

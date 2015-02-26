@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MvxSample.Core.Models;
+using ReactiveUISample.Core.ViewModels;
 
 namespace ReactiveUISample.Core.Services
 {
@@ -15,16 +18,34 @@ namespace ReactiveUISample.Core.Services
             _searxProvider = new SearxSearchProvider();
         }
 
-        public Task<IEnumerable<SearchResult>> QueryAsync(string query, SearchProvider provider)
+        public IObservable<SearchResultViewModel> QueryAsync(string query, SearchProvider provider)
         {
+            Task<IEnumerable<SearchResult>> resultTask;
             switch (provider)
             {
                 case SearchProvider.DuckDuckGo:
-                    return _duckDuckGoProvider.QueryAsync(query);
-                case SearchProvider.Searx:
-                    return _searxProvider.QueryAsync(query);
+                    resultTask = _duckDuckGoProvider.QueryAsync(query);
+                    break;
+                default:
+                    resultTask = _searxProvider.QueryAsync(query);
+                    break;
             }
-            return null;
+
+            return Observable.Create<SearchResultViewModel>(async observer =>
+            {
+                try
+                {
+                    var results = await resultTask.ConfigureAwait(false);
+                    foreach(var result in results)
+                        observer.OnNext(new SearchResultViewModel(result));
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(e);
+                    return;
+                }
+                observer.OnCompleted();
+            });
         }
     }
 }

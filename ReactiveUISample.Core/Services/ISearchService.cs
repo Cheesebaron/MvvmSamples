@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MvxSample.Core.Models;
+﻿using System;
+using ReactiveUISample.Core.ViewModels;
 
 namespace ReactiveUISample.Core.Services
 {
@@ -12,6 +11,6 @@ namespace ReactiveUISample.Core.Services
 
     public interface ISearchService
     {
-        Task<IEnumerable<SearchResult>> QueryAsync(string query, SearchProvider provider);
+        IObservable<SearchResultViewModel> QueryAsync(string query, SearchProvider provider);
     }
 }
