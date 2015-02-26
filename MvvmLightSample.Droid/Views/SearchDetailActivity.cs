@@ -14,7 +14,7 @@ namespace MvvmLightSample.Droid.Views
     [Activity(Label = "Detail")]
     public class SearchDetailActivity : MvlActivity<SearchDetailViewModel>
     {
-        private BindableWebView _webView;
+        public BindableWebView WebView { get; private set; }
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -23,12 +23,9 @@ namespace MvvmLightSample.Droid.Views
 
             ViewModel = new SearchDetailViewModel(GlobalNavigation.GetAndRemoveParameter<SearchResult>(Intent));
 
-            _webView = FindViewById<BindableWebView>(Resource.Id.web);
+            WebView = FindViewById<BindableWebView>(Resource.Id.web);
 
-            // Why does this not work?!
-            //this.SetBinding(() => ViewModel.Url, () => _webView.Source);
-
-            _webView.Source = ViewModel.Url;
+            this.SetBinding(() => ViewModel.Url, () => WebView.Source);
         }
     }
 

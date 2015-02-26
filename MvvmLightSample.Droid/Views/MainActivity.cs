@@ -14,6 +14,7 @@ namespace MvvmLightSample.Droid
     public class MainActivity : MvlActivity<SearchViewModel>, ActionBar.IOnNavigationListener
     {
         private Binding _saveBinding;
+        public EditText QueryEdit { get; private set; }
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -33,13 +34,10 @@ namespace MvvmLightSample.Droid
             ActionBar.SetSelectedNavigationItem(0);
 
             var searchButton = FindViewById<Button>(Resource.Id.searchButton);
-            var queryEdit = FindViewById<EditText>(Resource.Id.queryEditText);
+            QueryEdit = FindViewById<EditText>(Resource.Id.queryEditText);
             var resultsList = FindViewById<ListView>(Resource.Id.searchResultsListView);
 
-            queryEdit.Text = ViewModel.Query;
-            //_saveBinding = this.SetBinding(
-            //    () => ViewModel.Query,
-            //    () => queryEdit.Text);
+            _saveBinding = this.SetBinding(() => ViewModel.Query, () => QueryEdit.Text);
             searchButton.SetCommand("Click", ViewModel.SearchCommand);
 
             resultsList.Adapter = ViewModel.SearchResults.GetAdapter(GetTemplateDelegate);
