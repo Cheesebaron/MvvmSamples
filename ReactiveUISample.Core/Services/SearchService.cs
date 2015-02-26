@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MvxSample.Core.Models;
+using ReactiveUI;
 using ReactiveUISample.Core.ViewModels;
 
 namespace ReactiveUISample.Core.Services
@@ -18,7 +19,7 @@ namespace ReactiveUISample.Core.Services
             _searxProvider = new SearxSearchProvider();
         }
 
-        public IObservable<SearchResultViewModel> QueryAsync(string query, SearchProvider provider)
+        public IObservable<SearchResultViewModel> QueryAsync(string query, SearchProvider provider, IScreen hostScreen = null)
         {
             Task<IEnumerable<SearchResult>> resultTask;
             switch (provider)
@@ -37,7 +38,7 @@ namespace ReactiveUISample.Core.Services
                 {
                     var results = await resultTask.ConfigureAwait(false);
                     foreach(var result in results)
-                        observer.OnNext(new SearchResultViewModel(result));
+                        observer.OnNext(new SearchResultViewModel(result, hostScreen));
                 }
                 catch (Exception e)
                 {

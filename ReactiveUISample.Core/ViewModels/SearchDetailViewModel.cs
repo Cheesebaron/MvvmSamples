@@ -1,14 +1,11 @@
 ﻿using MvxSample.Core.Models;
 using ReactiveUI;
-using Splat;
 
 namespace ReactiveUISample.Core.ViewModels
 {
-    public class SearchDetailViewModel : ReactiveObject, IRoutableViewModel
+    public class SearchDetailViewModel : ReactiveObject
     {
         private string _url;
-        public string UrlPathSegment { get { return "Detail"; }}
-        public IScreen HostScreen { get; private set; }
 
         public string Url
         {
@@ -18,8 +15,6 @@ namespace ReactiveUISample.Core.ViewModels
 
         public SearchDetailViewModel(SearchResult result)
         {
-            HostScreen = Locator.Current.GetService<IScreen>();
-
             Url = result.Url;
         }
     }

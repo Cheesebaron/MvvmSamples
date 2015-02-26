@@ -60,6 +60,9 @@
     <Reference Include="ReactiveUI.AndroidSupport">
       <HintPath>..\packages\reactiveui-androidsupport.6.4.0.1\lib\Monoandroid\ReactiveUI.AndroidSupport.dll</HintPath>
     </Reference>
+    <Reference Include="ReactiveUI.Events">
+      <HintPath>..\packages\reactiveui-events.6.4.0.1\lib\Monoandroid\ReactiveUI.Events.dll</HintPath>
+    </Reference>
     <Reference Include="Splat">
       <HintPath>..\packages\Splat.1.6.0\lib\monoandroid\Splat.dll</HintPath>
     </Reference>
@@ -94,6 +97,7 @@
     <Compile Include="Views\SearchDetailView.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />

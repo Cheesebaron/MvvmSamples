@@ -1,4 +1,5 @@
 ﻿using System;
+using ReactiveUI;
 using ReactiveUISample.Core.ViewModels;
 
 namespace ReactiveUISample.Core.Services
@@ -11,6 +12,6 @@ namespace ReactiveUISample.Core.Services
 
     public interface ISearchService
     {
-        IObservable<SearchResultViewModel> QueryAsync(string query, SearchProvider provider);
+        IObservable<SearchResultViewModel> QueryAsync(string query, SearchProvider provider, IScreen hostScreen = null);
     }
 }

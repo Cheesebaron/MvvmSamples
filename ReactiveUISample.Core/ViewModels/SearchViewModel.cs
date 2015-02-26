@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Windows.Input;
-using MvxSample.Core.Models;
 using ReactiveUI;
 using ReactiveUISample.Core.Services;
 using Splat;
@@ -33,10 +31,6 @@ namespace ReactiveUISample.Core.ViewModels
 
         public ReactiveList<SearchResultViewModel> SearchResults { get; set; }
 
-        public SearchResult SelectedResult { get; set; }
-
-        public ICommand GoToSearchDetailCommand { get; protected set; } 
-
         public SearchViewModel(IScreen hostScreen = null, ISearchService searchService = null)
         {
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>();
@@ -50,19 +44,12 @@ namespace ReactiveUISample.Core.ViewModels
             Search = ReactiveCommand.CreateAsyncObservable(canExecute,
                 _ => {
                     SearchResults.Clear();
-                    return SearchService.QueryAsync(SearchQuery, SearchProvider);
+                    return SearchService.QueryAsync(SearchQuery, SearchProvider, HostScreen);
                 });
 
             Search.Subscribe(result => SearchResults.Add(result));
 
             Search.ThrownExceptions.Subscribe(x => Debug.WriteLine(x));
-
-            
-
-            var gotoCmd = this.WhenAny(x => x.SelectedResult,
-                change => change.Value != null).ToCommand(RxApp.MainThreadScheduler);
-            gotoCmd.Subscribe(o => HostScreen.Router.Navigate.Execute(o));
-            GoToSearchDetailCommand = gotoCmd;
         }
     }
 }

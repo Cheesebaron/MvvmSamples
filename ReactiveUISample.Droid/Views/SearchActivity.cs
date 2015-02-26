@@ -41,8 +41,6 @@ namespace ReactiveUISample.Droid.Views
 
             this.Bind(ViewModel, vm => vm.SearchQuery, v => v.SearchText.Text);
             this.BindCommand(ViewModel, vm => vm.Search, v => v.SearchButton);
-            //this.BindCommand(ViewModel, vm => vm.GoToSearchDetailCommand,
-            //    v => v.SearchResultListView.ItemClick);
 
             var adapter = new ReactiveListAdapter<SearchResultViewModel>(
                 ViewModel.SearchResults,
@@ -66,6 +64,8 @@ namespace ReactiveUISample.Droid.Views
 
 			this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Text);
             this.OneWayBind(ViewModel, vm => vm.Content, v => v.Content.Text);
+
+            this.BindCommand(ViewModel, vm => vm.ShowThisResult, v => v.Title);
 		}
 
 		public TextView Title { get; private set; }
